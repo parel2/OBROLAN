@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOT AI N2OKTENA - Ulang Tahun Fira & OPSI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff69b4, #1e3a8a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #ff69b4, #1e3a8a);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chat-subtitle {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.3;
+            font-style: italic;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bot-message {
+            background: #f1f3f4;
+            color: #1e3a8a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: #ff69b4;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .sender-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .options-container {
+            padding: 0 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-button {
+            background: linear-gradient(90deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            background: linear-gradient(90deg, #ff1493, #dc143c);
+        }
+
+        .option-button:active {
+            transform: translateY(0);
+        }
+
+        .ending-container {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #ff69b4, #1e3a8a);
+            color: white;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .ending-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .ending-description {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background: white;
+            color: #ff69b4;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .restart-button:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 16px;
+            background: #f1f3f4;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            max-width: 80px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #1e3a8a;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                height: 95vh;
+                max-width: 100%;
+                border-radius: 10px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .message {
+                font-size: 14px;
+            }
+            
+            .ending-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            🤖 BOT AI N2OKTENA 🤖
+        </div>
+        <div class="chat-subtitle">
+            Website ini berintegrasi dengan AI GPT, oleh karna itu semua jawaban maupun pilihan diberikan langsung oleh AI dengan penyesuaian data serta alur yang disusun. oleh karna itu maka seluruh cabang disusun dengan AI gratisan hehe karna mahal boss
+        </div>
+        <div class="chat-messages" id="chatMessages">
+        </div>
+        <div class="options-container" id="optionsContainer">
+        </div>
+    </div>
+
+    <script>
+        // Extended Conversation Structure - 30+ steps per branch
+        const conversation = {
+            // Starting point
+            1: {
+                text: "Selamat ulang tahun, Fira! Semoga makin sukses di semua hal, termasuk OPSI nanti. Lagi santai atau sibuk hari ini?",
+                options: [
+                    { text: "Santai aja", next: 2 },
+                    { text: "Sibuk banget", next: 101 },
+                    { text: "Nggak mau bahas", next: 201 }
+                ]
+            },
+
+            // JALUR A: OPTIMIS/SANTAI (ID 2-50) - MENUJU HEPPY ENDING
+            2: {
+                text: "Baguslah kalau santai. Aku mau update progres OPSI kita. Kamu udah baca proposal yang kemarin?",
+                options: [
+                    { text: "Udah, lumayan bagus kok", next: 3 },
+                    { text: "Baru sebagian", next: 4 },
+                    { text: "Belum sempat", next: 5 }
+                ]
+            },
+            3: {
+                text: "Seneng denger itu! Menurutmu bagian mana yang paling kuat dari proposal kita?",
+                options: [
+                    { text: "Bagian metodologi", next: 6 },
+                    { text: "Inovasi teknologinya", next: 7 },
+                    { text: "Overall strukturnya udah oke", next: 8 }
+                ]
+            },
+            4: {
+                text: "Gak papa, yang penting kamu sempet baca. Ada feedback khusus buat bagian yang udah kamu baca?",
+                options: [
+                    { text: "Perlu diperbaiki dikit", next: 9 },
+                    { text: "Udah cukup bagus", next: 10 },
+                    { text: "Masih bingung beberapa part", next: 11 }
+                ]
+            },
+            5: {
+                text: "Oke, nanti kalau ada waktu dibaca ya. Sekarang aku mau diskusi timeline pengerjaan. Kamu available kapan?",
+                options: [
+                    { text: "Besok sore", next: 12 },
+                    { text: "Weekend aja", next: 13 },
+                    { text: "Fleksibel kok", next: 14 }
+                ]
+            },
+            6: {
+                text: "Setuju! Metodologi kita memang solid. Kamu mau handle bagian implementasi atau lebih prefer bagian analisis?",
+                options: [
+                    { text: "Implementasi aja", next: 15 },
+                    { text: "Analisis lebih cocok", next: 16 },
+                    { text: "Bagi rata gimana?", next: 17 }
+                ]
+            },
+            7: {
+                text: "Iya, inovasi teknologi jadi value proposition utama kita. Kamu confident bisa ngerjain coding part-nya?",
+                options: [
+                    { text: "Confident banget", next: 18 },
+                    { text: "Perlu belajar dikit", next: 19 },
+                    { text: "Mungkin butuh bantuan", next: 20 }
+                ]
+            },
+            8: {
+                text: "Struktur emang udah rapi ya. Sekarang tinggal fokus ke detail execution. Mau mulai dari bagian mana?",
+                options: [
+                    { text: "Research dulu", next: 21 },
+                    { text: "Prototype development", next: 22 },
+                    { text: "Testing strategy", next: 23 }
+                ]
+            },
+            9: {
+                text: "Oke, feedback yang konstruktif. Bagian mana yang menurut kamu perlu improvement?",
+                options: [
+                    { text: "Bagian introduction", next: 24 },
+                    { text: "Literature review", next: 25 },
+                    { text: "Expected outcomes", next: 26 }
+                ]
+            },
+            10: {
+                text: "Mantap! Berarti kita bisa lanjut ke tahap berikutnya. Kamu siap buat start working on timeline?",
+                options: [
+                    { text: "Siap banget", next: 27 },
+                    { text: "Kasih waktu sehari lagi", next: 28 },
+                    { text: "Let's do it now", next: 29 }
+                ]
+            },
+            11: {
+                text: "No worries, kita bisa diskusi part yang bikin bingung. Mau jelasin sekarang atau nanti?",
+                options: [
+                    { text: "Sekarang aja", next: 30 },
+                    { text: "Nanti pas ketemu", next: 31 },
+                    { text: "Via chat juga oke", next: 32 }
+                ]
+            },
+            12: {
+                text: "Perfect, besok sore kita meeting ya. Aku udah siapin agenda: review proposal, bagi tugas, sama timeline. Oke?",
+                options: [
+                    { text: "Oke, lengkap banget", next: 33 },
+                    { text: "Tambahin discussion budget", next: 34 },
+                    { text: "Singkat aja, 1 jam cukup", next: 35 }
+                ]
+            },
+            13: {
+                text: "Weekend sounds good. Sabtu atau Minggu? Kita bisa meeting lebih santai, plus brainstorming session.",
+                options: [
+                    { text: "Sabtu pagi", next: 36 },
+                    { text: "Minggu sore", next: 37 },
+                    { text: "Terserah kamu", next: 38 }
+                ]
+            },
+            14: {
+                text: "Fleksibel bagus! Berarti kita bisa adjust sesuai progress. Kamu prefer working style gimana?",
+                options: [
+                    { text: "Step by step", next: 39 },
+                    { text: "Sprint intensive", next: 40 },
+                    { text: "Balance aja", next: 41 }
+                ]
+            },
+            15: {
+                text: "Oke, implementasi buat kamu. Aku akan fokus ke documentation sama testing. Kita sync progress tiap 3 hari?",
+                options: [
+                    { text: "Setuju, 3 hari sekali", next: 42 },
+                    { text: "Daily standup lebih baik", next: 43 },
+                    { text: "Weekly aja cukup", next: 44 }
+                ]
+            },
+            16: {
+                text: "Analisis cocok buat kamu. Aku handle technical development. Kita butuh tools collaboration apa?",
+                options: [
+                    { text: "Google Workspace", next: 45 },
+                    { text: "Notion + GitHub", next: 46 },
+                    { text: "WhatsApp grup aja", next: 47 }
+                ]
+            },
+            17: {
+                text: "Bagi rata smart choice. Kita bisa saling backup kalau ada yang stuck. Timeline realistic berapa lama?",
+                options: [
+                    { text: "2 minggu", next: 48 },
+                    { text: "3 minggu", next: 49 },
+                    { text: "1 bulan", next: 50 }
+                ]
+            },
+            18: {
+                text: "Confidence level tinggi, I like that! Kamu udah punya experience dengan tech stack yang mau kita pakai?",
+                options: [
+                    { text: "Udah familiar", next: 42 },
+                    { text: "Perlu refresh dikit", next: 43 },
+                    { text: "Learn by doing", next: 44 }
+                ]
+            },
+            19: {
+                text: "Learning mindset bagus! Aku bisa share beberapa resources yang helpful. Mau sekarang atau nanti?",
+                options: [
+                    { text: "Share sekarang", next: 45 },
+                    { text: "Nanti aja pas mulai", next: 46 },
+                    { text: "Kirim via email", next: 47 }
+                ]
+            },
+            20: {
+                text: "No problem, teamwork itu saling bantu. Aku bisa pair programming sama kamu. Kapan mau mulai?",
+                options: [
+                    { text: "Minggu depan", next: 48 },
+                    { text: "Setelah finalisasi design", next: 49 },
+                    { text: "ASAP", next: 50 }
+                ]
+            },
+            21: {
+                text: "Research first, smart approach. Aku udah compile beberapa papers relevans. Mau aku share list-nya?",
+                options: [
+                    { text: "Yes please", next: 42 },
+                    { text: "Nanti aja kalau butuh", next: 43 },
+                    { text: "Aku cari sendiri dulu", next: 44 }
+                ]
+            },
+            22: {
+                text: "Prototype development exciting choice! Kita mulai dari MVP atau langsung comprehensive version?",
+                options: [
+                    { text: "MVP dulu", next: 45 },
+                    { text: "Comprehensive version", next: 46 },
+                    { text: "Lihat progress research", next: 47 }
+                ]
+            },
+            23: {
+                text: "Testing strategy penting banget. Kamu prefer manual testing atau automated testing approach?",
+                options: [
+                    { text: "Manual testing", next: 48 },
+                    { text: "Automated testing", next: 49 },
+                    { text: "Hybrid approach", next: 50 }
+                ]
+            },
+            24: {
+                text: "Introduction memang crucial buat first impression. Kamu ada ide specific gimana improve-nya?",
+                options: [
+                    { text: "Add more compelling hook", next: 42 },
+                    { text: "Strengthen problem statement", next: 43 },
+                    { text: "Better background context", next: 44 }
+                ]
+            },
+            25: {
+                text: "Literature review butuh update ya. Aku bisa cariin recent papers yang relevans. Mau fokus ke area mana?",
+                options: [
+                    { text: "Metodologi terbaru", next: 45 },
+                    { text: "Case studies serupa", next: 46 },
+                    { text: "Theoretical framework", next: 47 }
+                ]
+            },
+            26: {
+                text: "Expected outcomes emang perlu lebih specific. Kita define measurable targets atau qualitative goals?",
+                options: [
+                    { text: "Measurable targets", next: 48 },
+                    { text: "Qualitative goals", next: 49 },
+                    { text: "Kombinasi keduanya", next: 50 }
+                ]
+            },
+            27: {
+                text: "Siap banget! Energy-nya bagus. Kita target submit proposal final kapan?",
+                options: [
+                    { text: "Akhir bulan ini", next: 42 },
+                    { text: "Awal bulan depan", next: 43 },
+                    { text: "Sesuai deadline official", next: 44 }
+                ]
+            },
+            28: {
+                text: "Sehari lagi reasonable. Kamu butuh waktu buat prepare atau ada hal lain yang perlu diselesaikan dulu?",
+                options: [
+                    { text: "Perlu organize schedule", next: 45 },
+                    { text: "Ada tugas lain", next: 46 },
+                    { text: "Mental preparation", next: 47 }
+                ]
+            },
+            29: {
+                text: "Let's do it now! I love the enthusiasm. Kita mulai dari milestone planning atau task breakdown?",
+                options: [
+                    { text: "Milestone planning", next: 48 },
+                    { text: "Task breakdown", next: 49 },
+                    { text: "Resource allocation", next: 50 }
+                ]
+            },
+            30: {
+                text: "Oke, mari kita clarify sekarang. Bagian mana yang bikin bingung? Technical part atau conceptual part?",
+                options: [
+                    { text: "Technical implementation", next: 42 },
+                    { text: "Conceptual framework", next: 43 },
+                    { text: "Overall flow", next: 44 }
+                ]
+            },
+            31: {
+                text: "Oke pas ketemu nanti. Aku siapkan visual aids biar lebih jelas. Kamu ada preferensi tempat meeting?",
+                options: [
+                    { text: "Library", next: 45 },
+                    { text: "Cafe", next: 46 },
+                    { text: "Lab komputer", next: 47 }
+                ]
+            },
+            32: {
+                text: "Via chat works! Aku bisa screen share kalau perlu. Mau pakai platform apa? Zoom, Meet, atau Discord?",
+                options: [
+                    { text: "Zoom", next: 48 },
+                    { text: "Google Meet", next: 49 },
+                    { text: "Discord", next: 50 }
+                ]
+            },
+            33: {
+                text: "Agenda memang lengkap. Aku optimis meeting besok bakal productive. Kamu udah siap materi presentasi?",
+                options: [
+                    { text: "Udah siap", next: 42 },
+                    { text: "Masih draft", next: 43 },
+                    { text: "Belum buat", next: 44 }
+                ]
+            },
+            34: {
+                text: "Good point! Budget discussion penting. Kamu udah estimate biaya development dan testing?",
+                options: [
+                    { text: "Udah rough estimate", next: 45 },
+                    { text: "Belum detail", next: 46 },
+                    { text: "Perlu research cost", next: 47 }
+                ]
+            },
+            35: {
+                text: "1 jam efficient meeting. Aku akan prepare focused agenda. Kamu prefer structured discussion atau freestyle?",
+                options: [
+                    { text: "Structured discussion", next: 48 },
+                    { text: "Freestyle brainstorming", next: 49 },
+                    { text: "Mix keduanya", next: 50 }
+                ]
+            },
+            36: {
+                text: "Sabtu pagi fresh timing! Kita bisa maksimalin creativity. Location: campus atau tempat lain?",
+                options: [
+                    { text: "Campus", next: 42 },
+                    { text: "Perpus kota", next: 43 },
+                    { text: "Co-working space", next: 44 }
+                ]
+            },
+            37: {
+                text: "Minggu sore relaxed vibe. Perfect buat deep discussion. Kamu mau sekalian working session atau discussion only?",
+                options: [
+                    { text: "Working session", next: 45 },
+                    { text: "Discussion only", next: 46 },
+                    { text: "Lihat flow aja", next: 47 }
+                ]
+            },
+            38: {
+                text: "Terserah aku? Oke, aku pilih Sabtu pagi. Fresh mind, productive energy. Kamu oke dengan choice itu?",
+                options: [
+                    { text: "Perfect choice", next: 48 },
+                    { text: "Sabtu sore better", next: 49 },
+                    { text: "Whatever works", next: 50 }
+                ]
+            },
+            39: {
+                text: "Step by step approach solid! Kita bisa mitigate risks dan ensure quality. First step: finalize scope ya?",
+                options: [
+                    { text: "Agreed, scope first", next: 42 },
+                    { text: "Add risk assessment", next: 43 },
+                    { text: "Include quality metrics", next: 44 }
+                ]
+            },
+            40: {
+                text: "Sprint intensive bisa faster results! Tapi kita perlu stamina dan focus tinggi. Kamu ready buat commitment?",
+                options: [
+                    { text: "Ready 100%", next: 45 },
+                    { text: "Ready tapi perlu breaks", next: 46 },
+                    { text: "Let's try", next: 47 }
+                ]
+            },
+            41: {
+                text: "Balance approach wise choice! Sustainable dan productive. Kita set working hours atau fleksibel aja?",
+                options: [
+                    { text: "Set working hours", next: 48 },
+                    { text: "Fleksibel schedule", next: 49 },
+                    { text: "Hybrid model", next: 50 }
+                ]
+            },
+            42: {
+                text: "Oke, sistem sync-nya udah clear. Sekarang soal final presentation, kamu mau handle visual design atau content delivery?",
+                options: [
+                    { text: "Visual design", next: "heppyEnding" },
+                    { text: "Content delivery", next: "heppyEnding" },
+                    { text: "Kolaborasi fifty-fifty", next: "heppyEnding" }
+                ]
+            },
+            43: {
+                text: "Communication flow udah established. Terakhir, kamu confident dengan timeline yang kita set? Ada yang perlu adjust?",
+                options: [
+                    { text: "Confident, timeline realistic", next: "heppyEnding" },
+                    { text: "Perlu tambah buffer time", next: "heppyEnding" },
+                    { text: "Let's stick to plan", next: "heppyEnding" }
+                ]
+            },
+            44: {
+                text: "Approach kita udah mature dan well-planned. Aku yakin kita bisa deliver excellent results. Ready to make it happen?",
+                options: [
+                    { text: "Absolutely ready!", next: "heppyEnding" },
+                    { text: "Let's do this!", next: "heppyEnding" },
+                    { text: "Bring it on!", next: "heppyEnding" }
+                ]
+            },
+            45: {
+                text: "Tools dan resources udah diidentifikasi. Kita tinggal execution phase. Semangat kerjasama kita bagus banget!",
+                options: [
+                    { text: "Tim kita memang solid", next: "heppyEnding" },
+                    { text: "Collaboration goals!", next: "heppyEnding" },
+                    { text: "Siap tempur bareng!", next: "heppyEnding" }
+                ]
+            },
+            46: {
+                text: "Planning phase completed successfully. Kita udah cover semua aspek penting. Time to turn vision into reality!",
+                options: [
+                    { text: "Vision to reality!", next: "heppyEnding" },
+                    { text: "Make it happen!", next: "heppyEnding" },
+                    { text: "Execute with excellence!", next: "heppyEnding" }
+                ]
+            },
+            47: {
+                text: "Coordination dan strategy udah on point. Aku appreciate teamwork attitude kamu. Let's ace this competition!",
+                options: [
+                    { text: "We got this!", next: "heppyEnding" },
+                    { text: "Team goals achieved!", next: "heppyEnding" },
+                    { text: "Competition ready!", next: "heppyEnding" }
+                ]
+            },
+            48: {
+                text: "Strategic planning complete! Semua foundation udah kuat. Kita siap deliver winning solution. Partnership kita solid!",
+                options: [
+                    { text: "Solid partnership!", next: "heppyEnding" },
+                    { text: "Winning mindset!", next: "heppyEnding" },
+                    { text: "Strong foundation!", next: "heppyEnding" }
+                ]
+            },
+            49: {
+                text: "Excellent preparation work! Kita udah anticipate challenges dan prepare solutions. Team chemistry kita perfect!",
+                options: [
+                    { text: "Perfect chemistry!", next: "heppyEnding" },
+                    { text: "Solution ready!", next: "heppyEnding" },
+                    { text: "Challenge accepted!", next: "heppyEnding" }
+                ]
+            },
+            50: {
+                text: "Outstanding collaboration! Semua pieces udah fit together. Kita ready to dominate competition dengan team spirit yang luar biasa!",
+                options: [
+                    { text: "Team spirit tinggi!", next: "heppyEnding" },
+                    { text: "Dominate the competition!", next: "heppyEnding" },
+                    { text: "Luar biasa indeed!", next: "heppyEnding" }
+                ]
+            },
+
+            // JALUR B: RAGU-RAGU (ID 101-150) - MENUJU BINGUNG ENDING
+            101: {
+                text: "Sibuk ya? Semoga gak overwhelmed. Soal OPSI, kamu masih on track atau udah mulai tertinggal?",
+                options: [
+                    { text: "Masih on track kok", next: 102 },
+                    { text: "Agak tertinggal dikit", next: 103 },
+                    { text: "Honestly, overwhelmed", next: 104 }
+                ]
+            },
+            102: {
+                text: "Bagus kalau masih on track. Tapi dengan jadwal sibuk, kamu yakin bisa maintain quality?",
+                options: [
+                    { text: "Yakin, management oke", next: 105 },
+                    { text: "Agak khawatir juga", next: 106 },
+                    { text: "Belum kepikiran", next: 107 }
+                ]
+            },
+            103: {
+                text: "Tertinggal dikit masih recoverable. Yang bikin tertinggal part mana? Technical atau administrative?",
+                options: [
+                    { text: "Technical development", next: 108 },
+                    { text: "Administrative stuff", next: 109 },
+                    { text: "Overall planning", next: 110 }
+                ]
+            },
+            104: {
+                text: "Overwhelmed understandable. Kamu mau break sebentar atau push through? Aku bisa adjust expectations.",
+                options: [
+                    { text: "Break sebentar", next: 111 },
+                    { text: "Push through aja", next: 112 },
+                    { text: "Butuh help", next: 113 }
+                ]
+            },
+            105: {
+                text: "Management oke tapi kadang unpredictable things happen. Backup plan kamu gimana kalau ada unexpected issue?",
+                options: [
+                    { text: "Belum mikir backup", next: 114 },
+                    { text: "Ada contingency plan", next: 115 },
+                    { text: "Cross that bridge later", next: 116 }
+                ]
+            },
+            106: {
+                text: "Khawatir itu normal. Specific concern-nya apa? Time management atau technical capability?",
+                options: [
+                    { text: "Time management", next: 117 },
+                    { text: "Technical capability", next: 118 },
+                    { text: "Both actually", next: 119 }
+                ]
+            },
+            107: {
+                text: "Belum kepikiran bisa risky. Mau kita discuss potential challenges sekarang atau nanti pas ada waktu?",
+                options: [
+                    { text: "Sekarang aja singkat", next: 120 },
+                    { text: "Nanti pas free", next: 121 },
+                    { text: "Kayaknya gak perlu", next: 122 }
+                ]
+            },
+            108: {
+                text: "Technical development emang challenging. Kamu stuck di coding part atau design architecture?",
+                options: [
+                    { text: "Coding implementation", next: 123 },
+                    { text: "Design architecture", next: 124 },
+                    { text: "Integration issues", next: 125 }
+                ]
+            },
+            109: {
+                text: "Administrative stuff memang tedious. Documentation atau submission requirements yang bikin bingung?",
+                options: [
+                    { text: "Documentation format", next: 126 },
+                    { text: "Submission requirements", next: 127 },
+                    { text: "Timeline confusion", next: 128 }
+                ]
+            },
+            110: {
+                text: "Overall planning memang fundamental. Kamu mau restructure approach atau fine-tune existing plan?",
+                options: [
+                    { text: "Restructure approach", next: 129 },
+                    { text: "Fine-tune existing", next: 130 },
+                    { text: "Tidak yakin mana", next: 131 }
+                ]
+            },
+            111: {
+                text: "Break itu healthy choice. Berapa lama break yang kamu butuh? Beberapa hari atau weekend aja?",
+                options: [
+                    { text: "Weekend aja cukup", next: 132 },
+                    { text: "Beberapa hari", next: 133 },
+                    { text: "Belum tau pasti", next: 134 }
+                ]
+            },
+            112: {
+                text: "Push through shows determination. Tapi jangan sampai burnout ya. Kamu ada support system?",
+                options: [
+                    { text: "Ada support keluarga", next: 135 },
+                    { text: "Mostly solo", next: 136 },
+                    { text: "Kadang dari temen", next: 137 }
+                ]
+            },
+            113: {
+                text: "Butuh help itu normal. Specific help yang kamu butuh: technical assistance atau moral support?",
+                options: [
+                    { text: "Technical assistance", next: 138 },
+                    { text: "Moral support", next: 139 },
+                    { text: "Both would help", next: 140 }
+                ]
+            },
+            114: {
+                text: "Backup plan penting lho. Kalau misalnya ada technical failure atau deadline pressure, gimana strategy-nya?",
+                options: [
+                    { text: "Simplify scope", next: 141 },
+                    { text: "Extend timeline", next: 142 },
+                    { text: "Belum kepikiran", next: 143 }
+                ]
+            },
+            115: {
+                text: "Ada contingency plan good thinking! Plan B-nya seperti apa? Alternative approach atau resource allocation?",
+                options: [
+                    { text: "Alternative approach", next: 144 },
+                    { text: "Resource reallocation", next: 145 },
+                    { text: "Masih general idea", next: 146 }
+                ]
+            },
+            116: {
+                text: "Cross bridge later bisa risky. Tapi ada benefit juga, more flexible. Kamu comfortable dengan uncertainty?",
+                options: [
+                    { text: "Comfortable enough", next: 147 },
+                    { text: "Agak uncomfortable", next: 148 },
+                    { text: "Depends situasi", next: 149 }
+                ]
+            },
+            117: {
+                text: "Time management challenge universal. Kamu udah coba time blocking atau masih freestyle schedule?",
+                options: [
+                    { text: "Time blocking", next: 141 },
+                    { text: "Freestyle schedule", next: 142 },
+                    { text: "Mixed approach", next: 143 }
+                ]
+            },
+            118: {
+                text: "Technical capability concern valid. Kamu mau upskill dulu atau proceed dengan current knowledge?",
+                options: [
+                    { text: "Upskill dulu", next: 144 },
+                    { text: "Proceed current knowledge", next: 145 },
+                    { text: "Belum decide", next: 146 }
+                ]
+            },
+            119: {
+                text: "Both issues sekaligus memang overwhelming. Priority mana yang mau diselesaikan dulu?",
+                options: [
+                    { text: "Time management first", next: 147 },
+                    { text: "Technical skills first", next: 148 },
+                    { text: "Tackle simultaneously", next: 149 }
+                ]
+            },
+            120: {
+                text: "Singkat discussion oke. Main risk: scope creep, technical debt, sama deadline pressure. Mana yang most likely?",
+                options: [
+                    { text: "Scope creep", next: 141 },
+                    { text: "Technical debt", next: 142 },
+                    { text: "Deadline pressure", next: 143 }
+                ]
+            },
+            121: {
+                text: "Nanti pas free works. Tapi jangan tunggu sampai too late ya. Reminder: kita discuss challenges soon?",
+                options: [
+                    { text: "Set reminder", next: 144 },
+                    { text: "Aku ingat sendiri", next: 145 },
+                    { text: "Kalau urgent aja", next: 146 }
+                ]
+            },
+            122: {
+                text: "Gak perlu... hmm, overconfidence atau genuine assessment? Kamu yakin sama risk tolerance level?",
+                options: [
+                    { text: "Yakin, calculated risk", next: 147 },
+                    { text: "Mungkin terlalu optimis", next: 148 },
+                    { text: "Honestly not sure", next: 149 }
+                ]
+            },
+            123: {
+                text: "Coding implementation stuck. Kamu prefer pair programming session atau independent debugging?",
+                options: [
+                    { text: "Pair programming", next: 141 },
+                    { text: "Independent debugging", next: 142 },
+                    { text: "Mix keduanya", next: 143 }
+                ]
+            },
+            124: {
+                text: "Design architecture fundamental. Kamu mau revisi from scratch atau iterative improvement?",
+                options: [
+                    { text: "Revisi from scratch", next: 144 },
+                    { text: "Iterative improvement", next: 145 },
+                    { text: "Belum decide approach", next: 146 }
+                ]
+            },
+            125: {
+                text: "Integration issues tricky. Compatibility problems atau workflow coordination yang bermasalah?",
+                options: [
+                    { text: "Compatibility problems", next: 147 },
+                    { text: "Workflow coordination", next: 148 },
+                    { text: "Multiple integration issues", next: 149 }
+                ]
+            },
+            126: {
+                text: "Documentation format confusing. Kamu udah check official guidelines atau masih assume-assume?",
+                options: [
+                    { text: "Udah check guidelines", next: 141 },
+                    { text: "Masih assume", next: 142 },
+                    { text: "Guidelines gak clear", next: 143 }
+                ]
+            },
+            127: {
+                text: "Submission requirements emang detail. Kamu mau break down requirements atau tackle as whole?",
+                options: [
+                    { text: "Break down detail", next: 144 },
+                    { text: "Tackle as whole", next: 145 },
+                    { text: "Butuh clarification", next: 146 }
+                ]
+            },
+            128: {
+                text: "Timeline confusion common issue. Multiple deadlines atau single deadline dengan unclear milestones?",
+                options: [
+                    { text: "Multiple deadlines", next: 147 },
+                    { text: "Unclear milestones", next: 148 },
+                    { text: "Both problems", next: 149 }
+                ]
+            },
+            129: {
+                text: "Restructure approach big decision. Kamu confident dengan new direction atau masih exploring options?",
+                options: [
+                    { text: "Confident new direction", next: 141 },
+                    { text: "Still exploring", next: 142 },
+                    { text: "Torn between options", next: 143 }
+                ]
+            },
+            130: {
+                text: "Fine-tune existing safer choice. Specific area yang mau di-improve: methodology atau execution?",
+                options: [
+                    { text: "Methodology improvement", next: 144 },
+                    { text: "Execution optimization", next: 145 },
+                    { text: "Both need work", next: 146 }
+                ]
+            },
+            131: {
+                text: "Tidak yakin mana shows honest self-assessment. Mau kita evaluate pros cons each approach?",
+                options: [
+                    { text: "Yes, evaluate together", next: 147 },
+                    { text: "Aku evaluate sendiri", next: 148 },
+                    { text: "Skip evaluation", next: 149 }
+                ]
+            },
+            132: {
+                text: "Weekend break reasonable. Kamu balik Monday dengan fresh perspective atau masih butuh adjustment time?",
+                options: [
+                    { text: "Fresh perspective", next: 141 },
+                    { text: "Butuh adjustment", next: 142 },
+                    { text: "Depends how weekend goes", next: 143 }
+                ]
+            },
+            133: {
+                text: "Beberapa hari break longer recovery. Itu means project timeline akan affected. Kamu oke dengan tradeoff?",
+                options: [
+                    { text: "Oke dengan tradeoff", next: 144 },
+                    { text: "Agak concern timeline", next: 145 },
+                    { text: "Dilema decision", next: 146 }
+                ]
+            },
+            134: {
+                text: "Belum tau pasti shows kamu really need break. Listen to your body and mind. Project success butuh sustainable pace.",
+                options: [
+                    { text: "Agree, sustainable pace", next: 147 },
+                    { text: "Tapi deadline pressure", next: 148 },
+                    { text: "Bingung balance-nya", next: 149 }
+                ]
+            },
+            135: {
+                text: "Support keluarga valuable. Mereka understand project demands atau cuma general support?",
+                options: [
+                    { text: "Understand project demands", next: 141 },
+                    { text: "General support aja", next: 142 },
+                    { text: "Mixed understanding", next: 143 }
+                ]
+            },
+            136: {
+                text: "Mostly solo bisa lonely. Kamu comfortable dengan solitary work atau prefer collaboration?",
+                options: [
+                    { text: "Comfortable solitary", next: 144 },
+                    { text: "Prefer collaboration", next: 145 },
+                    { text: "Situational preference", next: 146 }
+                ]
+            },
+            137: {
+                text: "Support dari temen kadang-kadang unpredictable. Kamu bisa rely on them atau backup plan needed?",
+                options: [
+                    { text: "Could rely on them", next: 147 },
+                    { text: "Backup plan needed", next: 148 },
+                    { text: "Uncertain reliability", next: 149 }
+                ]
+            },
+            138: {
+                text: "Technical assistance bisa game changer. Kamu udah identify specific areas atau general help?",
+                options: [
+                    { text: "Specific areas identified", next: 141 },
+                    { text: "General help needed", next: 142 },
+                    { text: "Belum detail analysis", next: 143 }
+                ]
+            },
+            139: {
+                text: "Moral support important for mental health. Kamu butuh encouragement atau accountability partner?",
+                options: [
+                    { text: "Encouragement", next: 144 },
+                    { text: "Accountability partner", next: 145 },
+                    { text: "Both would help", next: 146 }
+                ]
+            },
+            140: {
+                text: "Both technical dan moral support comprehensive approach. Priority mana yang urgent: technical atau emotional?",
+                options: [
+                    { text: "Technical priority", next: 147 },
+                    { text: "Emotional priority", next: 148 },
+                    { text: "Equal priority", next: 149 }
+                ]
+            },
+            141: {
+                text: "Approach yang kamu pilih reasonable, tapi aku notice ada pattern uncertainty di decisions kamu. Feeling overwhelmed normal?",
+                options: [
+                    { text: "Ya, overwhelmed dikit", next: "bingungEnding" },
+                    { text: "Masih manageable", next: "bingungEnding" },
+                    { text: "Uncertain about everything", next: "bingungEnding" }
+                ]
+            },
+            142: {
+                text: "Strategi kamu ada merit, but I sense ada underlying concerns yang belum di-address. Mau share what's really bothering you?",
+                options: [
+                    { text: "Fear of failure", next: "bingungEnding" },
+                    { text: "Imposter syndrome", next: "bingungEnding" },
+                    { text: "Unclear expectations", next: "bingungEnding" }
+                ]
+            },
+            143: {
+                text: "Choice kamu understandable, tapi sepertinya kita both struggle with clarity on direction. Maybe we need step back?",
+                options: [
+                    { text: "Ya, step back needed", next: "bingungEnding" },
+                    { text: "Keep pushing forward", next: "bingungEnding" },
+                    { text: "Honestly confused", next: "bingungEnding" }
+                ]
+            },
+            144: {
+                text: "Decision-making pattern kamu shows thoughtfulness, but maybe too much analysis paralysis? Sometimes action beats perfect planning.",
+                options: [
+                    { text: "Mungkin overthinking", next: "bingungEnding" },
+                    { text: "Better safe than sorry", next: "bingungEnding" },
+                    { text: "Balance is hard", next: "bingungEnding" }
+                ]
+            },
+            145: {
+                text: "Approach yang practical, tapi aku rasa ada disconnect between our visions. Kita masih aligned dengan goals?",
+                options: [
+                    { text: "Mungkin gak aligned", next: "bingungEnding" },
+                    { text: "Perlu realignment", next: "bingungEnding" },
+                    { text: "Honestly not sure", next: "bingungEnding" }
+                ]
+            },
+            146: {
+                text: "Uncertainty theme recurring di conversation kita. Maybe this project bigger than we initially thought?",
+                options: [
+                    { text: "Definitely bigger scope", next: "bingungEnding" },
+                    { text: "We underestimated", next: "bingungEnding" },
+                    { text: "Need reality check", next: "bingungEnding" }
+                ]
+            },
+            147: {
+                text: "Confidence level varies throughout our talk. Aku notice ada internal conflict antara optimism dan realism. Normal kok.",
+                options: [
+                    { text: "Internal conflict real", next: "bingungEnding" },
+                    { text: "Struggling with balance", next: "bingungEnding" },
+                    { text: "Need perspective shift", next: "bingungEnding" }
+                ]
+            },
+            148: {
+                text: "Concerns yang kamu express valid semua. Tapi maybe we're overthinking instead of doing? Action clarity sometimes comes from doing.",
+                options: [
+                    { text: "Overthinking indeed", next: "bingungEnding" },
+                    { text: "Need more planning", next: "bingungEnding" },
+                    { text: "Torn between both", next: "bingungEnding" }
+                ]
+            },
+            149: {
+                text: "Multiple factors creating confusion. Honest assessment: are we ready for this challenge atau need more preparation time?",
+                options: [
+                    { text: "Need more preparation", next: "bingungEnding" },
+                    { text: "Ready despite confusion", next: "bingungEnding" },
+                    { text: "Really don't know", next: "bingungEnding" }
+                ]
+            },
+
+            // JALUR C: MENJAUH/INDIVIDUALISTIK (ID 201-250) - MENUJU MUSUHAN ENDING  
+            201: {
+                text: "Nggak mau bahas? Oke... tapi kan ini soal proyek kita berdua. Kamu ada masalah sama approach kita?",
+                options: [
+                    { text: "Gak ada masalah", next: 202 },
+                    { text: "Ada concern dikit", next: 203 },
+                    { text: "Honestly, gak sreg", next: 204 }
+                ]
+            },
+            202: {
+                text: "Gak ada masalah tapi nggak mau bahas... contradiction nih. Kamu butuh space atau ada hal lain?",
+                options: [
+                    { text: "Butuh space aja", next: 205 },
+                    { text: "Ada hal lain", next: 206 },
+                    { text: "Gak mood discuss", next: 207 }
+                ]
+            },
+            203: {
+                text: "Concern apa yang bikin kamu hesitant? Communication issue atau metodologi yang kita pakai?",
+                options: [
+                    { text: "Communication issue", next: 208 },
+                    { text: "Metodologi approach", next: 209 },
+                    { text: "Personal working style", next: 210 }
+                ]
+            },
+            204: {
+                text: "Honestly gak sreg... appreciate honesty-nya. Specific aspect apa yang bikin gak comfortable?",
+                options: [
+                    { text: "Collaboration style", next: 211 },
+                    { text: "Project direction", next: 212 },
+                    { text: "Workload distribution", next: 213 }
+                ]
+            },
+            205: {
+                text: "Space itu valid need. Berapa lama space yang kamu butuh? Dan after that, kita lanjut atau reevaluate?",
+                options: [
+                    { text: "Beberapa hari aja", next: 214 },
+                    { text: "Sampai deadline dekat", next: 215 },
+                    { text: "Indefinite time", next: 216 }
+                ]
+            },
+            206: {
+                text: "Ada hal lain yang interfere. Personal issue atau academic pressure dari tempat lain?",
+                options: [
+                    { text: "Personal issue", next: 217 },
+                    { text: "Academic pressure", next: 218 },
+                    { text: "Don't want to share", next: 219 }
+                ]
+            },
+            207: {
+                text: "Gak mood discuss understandable. Tapi project won't pause untuk mood swings. How do we proceed?",
+                options: [
+                    { text: "Proceed without discussion", next: 220 },
+                    { text: "Postpone everything", next: 221 },
+                    { text: "Maybe I should step back", next: 222 }
+                ]
+            },
+            208: {
+                text: "Communication issue bisa diperbaiki. Kamu prefer different communication style atau frequency yang bermasalah?",
+                options: [
+                    { text: "Different style needed", next: 223 },
+                    { text: "Frequency too much", next: 224 },
+                    { text: "Just prefer minimal talk", next: 225 }
+                ]
+            },
+            209: {
+                text: "Metodologi approach concern valid. Kamu punya alternative suggestion atau prefer solo methodology?",
+                options: [
+                    { text: "Have alternative suggestion", next: 226 },
+                    { text: "Prefer solo methodology", next: 227 },
+                    { text: "Just don't like current way", next: 228 }
+                ]
+            },
+            210: {
+                text: "Personal working style clash happens. Kamu more independent worker atau prefer structured collaboration?",
+                options: [
+                    { text: "Independent worker", next: 229 },
+                    { text: "Structured collaboration", next: 230 },
+                    { text: "Depends on project", next: 231 }
+                ]
+            },
+            211: {
+                text: "Collaboration style gak cocok. Aku too controlling atau kamu prefer more autonomous work?",
+                options: [
+                    { text: "Too controlling", next: 232 },
+                    { text: "Prefer autonomous", next: 233 },
+                    { text: "We just don't mesh", next: 234 }
+                ]
+            },
+            212: {
+                text: "Project direction concern. Kamu punya different vision atau gak yakin sama current path?",
+                options: [
+                    { text: "Different vision", next: 235 },
+                    { text: "Uncertain current path", next: 236 },
+                    { text: "Want different project", next: 237 }
+                ]
+            },
+            213: {
+                text: "Workload distribution unfair? Kamu merasa dapat bagian lebih berat atau underutilized skills?",
+                options: [
+                    { text: "Bagian lebih berat", next: 238 },
+                    { text: "Skills underutilized", next: 239 },
+                    { text: "Just unequal partnership", next: 240 }
+                ]
+            },
+            214: {
+                text: "Beberapa hari reasonable. Tapi honestly, momentum lost bisa affect project quality. You sure about timing?",
+                options: [
+                    { text: "Sure about timing", next: 241 },
+                    { text: "Maybe shorter break", next: 242 },
+                    { text: "Momentum not priority", next: 243 }
+                ]
+            },
+            215: {
+                text: "Sampai deadline dekat risky strategy. Essentially kamu want me to handle most work until then?",
+                options: [
+                    { text: "You can handle it", next: 244 },
+                    { text: "We'll see closer to deadline", next: 245 },
+                    { text: "Maybe find other partner", next: 246 }
+                ]
+            },
+            216: {
+                text: "Indefinite time basically means project abandonment. Kamu subtly telling me to find another partner?",
+                options: [
+                    { text: "Not abandonment", next: 247 },
+                    { text: "Maybe that's best", next: 248 },
+                    { text: "I don't know anymore", next: 249 }
+                ]
+            },
+            217: {
+                text: "Personal issue affecting academic work common. But partnership means shared responsibility. Fair untuk partner?",
+                options: [
+                    { text: "You're right, unfair", next: 241 },
+                    { text: "Personal comes first", next: 242 },
+                    { text: "Partnership shouldn't suffer", next: 243 }
+                ]
+            },
+            218: {
+                text: "Academic pressure from multiple sources overwhelming. Priority OPSI dimana di list kamu?",
+                options: [
+                    { text: "Mid priority", next: 244 },
+                    { text: "Low priority honestly", next: 245 },
+                    { text: "Competing priorities", next: 246 }
+                ]
+            },
+            219: {
+                text: "Don't want to share privacy right. But secretive partner makes collaboration difficult. How to work together?",
+                options: [
+                    { text: "Just focus on work", next: 247 },
+                    { text: "Maybe we can't", next: 248 },
+                    { text: "Professional only", next: 249 }
+                ]
+            },
+            220: {
+                text: "Proceed without discussion dangerous precedent. Decisions made without input, conflicts inevitable. Still want this approach?",
+                options: [
+                    { text: "Yes, minimal discussion", next: 241 },
+                    { text: "Rethinking approach", next: 242 },
+                    { text: "Conflicts don't scare me", next: 243 }
+                ]
+            },
+            221: {
+                text: "Postpone everything means deadline missed, opportunity lost. Kamu comfortable dengan consequences?",
+                options: [
+                    { text: "Comfortable with consequences", next: 244 },
+                    { text: "Didn't think that far", next: 245 },
+                    { text: "Better than forced work", next: 246 }
+                ]
+            },
+            222: {
+                text: "Maybe I should step back... interesting. Kamu prefer solo project atau find different partner?",
+                options: [
+                    { text: "Solo project preferred", next: 247 },
+                    { text: "Different partner maybe", next: 248 },
+                    { text: "Haven't decided", next: 249 }
+                ]
+            },
+            223: {
+                text: "Different communication style achievable. But adaptation requires effort from both sides. Kamu willing to adapt too?",
+                options: [
+                    { text: "Willing to adapt", next: 241 },
+                    { text: "You should adapt more", next: 242 },
+                    { text: "Adaptation sounds hard", next: 243 }
+                ]
+            },
+            224: {
+                text: "Frequency too much noted. But project coordination needs communication. Minimum viable frequency berapa?",
+                options: [
+                    { text: "Once a week", next: 244 },
+                    { text: "When absolutely necessary", next: 245 },
+                    { text: "As little as possible", next: 246 }
+                ]
+            },
+            225: {
+                text: "Prefer minimal talk clear message. Partnership with minimal talk essentially independent work. Why partnership then?",
+                options: [
+                    { text: "Required by assignment", next: 247 },
+                    { text: "Thought it'd be easier", next: 248 },
+                    { text: "Mistake in judgment", next: 249 }
+                ]
+            },
+            226: {
+                text: "Alternative suggestion welcome. But changing methodology mid-project risky. Kamu confident dengan alternative?",
+                options: [
+                    { text: "Confident with alternative", next: 241 },
+                    { text: "Worth the risk", next: 242 },
+                    { text: "Better than current", next: 243 }
+                ]
+            },
+            227: {
+                text: "Solo methodology dalam partnership project contradiction. Essentially kamu want independence dengan partnership credit?",
+                options: [
+                    { text: "Independence important", next: 244 },
+                    { text: "Partnership credit fair", next: 245 },
+                    { text: "Both can coexist", next: 246 }
+                ]
+            },
+            228: {
+                text: "Just don't like current way without alternative unproductive criticism. Constructive suggestions atau just complaints?",
+                options: [
+                    { text: "Will think of suggestions", next: 247 },
+                    { text: "Maybe just complaints", next: 248 },
+                    { text: "Current way fundamentally wrong", next: 249 }
+                ]
+            },
+            229: {
+                text: "Independent worker dalam team project creates tension. Priority: personal comfort atau project success?",
+                options: [
+                    { text: "Personal comfort", next: 241 },
+                    { text: "Project success", next: 242 },
+                    { text: "Both equally important", next: 243 }
+                ]
+            },
+            230: {
+                text: "Structured collaboration requires mutual participation. Kamu participate fully atau passive collaboration?",
+                options: [
+                    { text: "Full participation", next: 244 },
+                    { text: "Passive collaboration", next: 245 },
+                    { text: "Selective participation", next: 246 }
+                ]
+            },
+            231: {
+                text: "Depends on project shows flexibility. This specific project needs collaboration. Kamu adapt atau find different project?",
+                options: [
+                    { text: "Will adapt", next: 247 },
+                    { text: "Different project better", next: 248 },
+                    { text: "Still evaluating", next: 249 }
+                ]
+            },
+            232: {
+                text: "Too controlling feedback noted. But coordination needs leadership. Kamu prefer chaos atau structured approach?",
+                options: [
+                    { text: "Structured with input", next: 241 },
+                    { text: "Less structure okay", next: 242 },
+                    { text: "Chaos better than control", next: 243 }
+                ]
+            },
+            233: {
+                text: "Autonomous work preference conflicts with partnership requirements. Compromise possible atau fundamental incompatibility?",
+                options: [
+                    { text: "Compromise possible", next: 244 },
+                    { text: "Fundamental incompatibility", next: 245 },
+                    { text: "Let's test limits", next: 246 }
+                ]
+            },
+            234: {
+                text: "We just don't mesh honest assessment. Chemistry matters in partnership. Continue despite poor chemistry?",
+                options: [
+                    { text: "Chemistry can develop", next: 247 },
+                    { text: "Poor chemistry fatal", next: 248 },
+                    { text: "Professional enough", next: 249 }
+                ]
+            },
+            235: {
+                text: "Different vision potentially irreconcilable. Whose vision prevails atau find middle ground?",
+                options: [
+                    { text: "Middle ground possible", next: 241 },
+                    { text: "My vision better", next: 242 },
+                    { text: "Visions incompatible", next: 243 }
+                ]
+            },
+            236: {
+                text: "Uncertain current path shows lack of confidence. Build confidence atau change path entirely?",
+                options: [
+                    { text: "Build confidence", next: 244 },
+                    { text: "Change path entirely", next: 245 },
+                    { text: "Uncertainty is clarity", next: 246 }
+                ]
+            },
+            237: {
+                text: "Want different project fundamental rejection. Current project salvageable atau total restart needed?",
+                options: [
+                    { text: "Total restart needed", next: 247 },
+                    { text: "Salvageable with changes", next: 248 },
+                    { text: "Different project entirely", next: 249 }
+                ]
+            },
+            238: {
+                text: "Bagian lebih berat unfair distribution. Rebalance workload atau you handle lighter tasks willingly?",
+                options: [
+                    { text: "Rebalance needed", next: 241 },
+                    { text: "Lighter tasks fine", next: 242 },
+                    { text: "Current distribution deliberate", next: 243 }
+                ]
+            },
+            239: {
+                text: "Skills underutilized waste of potential. Better skill utilization atau find project matching skills?",
+                options: [
+                    { text: "Better utilization", next: 244 },
+                    { text: "Different project", next: 245 },
+                    { text: "Skills overrated anyway", next: 246 }
+                ]
+            },
+            240: {
+                text: "Unequal partnership fundamental problem. Equal partnership possible atau accept inequality?",
+                options: [
+                    { text: "Equal partnership possible", next: 247 },
+                    { text: "Accept inequality", next: 248 },
+                    { text: "Inequality is natural", next: 249 }
+                ]
+            },
+            241: {
+                text: "Response kamu shows some flexibility. Tapi underlying tension masih ada. Honest question: kamu masih want partnership ini?",
+                options: [
+                    { text: "Yes, but with changes", next: "musuhanEnding" },
+                    { text: "Not really", next: "musuhanEnding" },
+                    { text: "Ambivalent", next: "musuhanEnding" }
+                ]
+            },
+            242: {
+                text: "Attitude kamu suggests partnership bukan priority. Effort minimal, expectations maksimal. Fair untuk partner?",
+                options: [
+                    { text: "Maybe not fair", next: "musuhanEnding" },
+                    { text: "That's just realistic", next: "musuhanEnding" },
+                    { text: "Partnership overrated", next: "musuhanEnding" }
+                ]
+            },
+            243: {
+                text: "Stance kamu increasingly individualistic. Partnership requires mutual investment. Kamu truly committed atau just going through motions?",
+                options: [
+                    { text: "Just going through motions", next: "musuhanEnding" },
+                    { text: "Commitment is complicated", next: "musuhanEnding" },
+                    { text: "Individual success more important", next: "musuhanEnding" }
+                ]
+            },
+            244: {
+                text: "Decisions kamu consistently prioritize personal comfort over partnership success. Pattern clear: self-interest dominates.",
+                options: [
+                    { text: "Self-interest natural", next: "musuhanEnding" },
+                    { text: "Partnership should benefit me", next: "musuhanEnding" },
+                    { text: "What's wrong with that?", next: "musuhanEnding" }
+                ]
+            },
+            245: {
+                text: "Responses show minimal investment in collaborative success. Kamu treat partnership as convenience, not commitment.",
+                options: [
+                    { text: "Convenience is practical", next: "musuhanEnding" },
+                    { text: "Commitment is overrated", next: "musuhanEnding" },
+                    { text: "Partnership should be easy", next: "musuhanEnding" }
+                ]
+            },
+            246: {
+                text: "Pattern emerging: kamu want partnership benefits without partnership responsibilities. Classic free-rider mentality.",
+                options: [
+                    { text: "Benefits should be easy", next: "musuhanEnding" },
+                    { text: "Responsibilities are burden", next: "musuhanEnding" },
+                    { text: "Smart resource utilization", next: "musuhanEnding" }
+                ]
+            },
+            247: {
+                text: "Communication breakdown evident. Kamu prefer isolation over collaboration. Partnership fundamentally incompatible dengan style kamu.",
+                options: [
+                    { text: "Isolation is honest", next: "musuhanEnding" },
+                    { text: "Collaboration is overrated", next: "musuhanEnding" },
+                    { text: "Incompatibility is mutual", next: "musuhanEnding" }
+                ]
+            },
+            248: {
+                text: "Conclusion reached: working styles completely incompatible. Continuing partnership akan merugikan both parties.",
+                options: [
+                    { text: "Agreed, incompatible", next: "musuhanEnding" },
+                    { text: "Your loss", next: "musuhanEnding" },
+                    { text: "Finally, some honesty", next: "musuhanEnding" }
+                ]
+            },
+            249: {
+                text: "Ultimate assessment: partnership failed before it truly began. Different priorities, different values, different commitment levels.",
+                options: [
+                    { text: "Different is not wrong", next: "musuhanEnding" },
+                    { text: "Failed partnership happens", next: "musuhanEnding" },
+                    { text: "Better to end now", next: "musuhanEnding" }
+                ]
+            },
+
+            // ENDING NODES
+            heppyEnding: { 
+                ending: "HEPPY", 
+                description: "Kolaborasi sukses! Tim kita solid dengan komunikasi yang baik, pembagian tugas yang adil, dan semangat yang tinggi. Proyek OPSI siap dikerjakan dengan optimal. Partnership yang productive dan saling support - inilah contoh teamwork yang ideal!" 
+            },
+            bingungEnding: { 
+                ending: "BINGUNG", 
+                description: "Situasi abu-abu dengan banyak ketidakpastian. Meskipun ada niat baik dari kedua pihak, direction belum clear dan confidence level masih rendah. Mungkin butuh lebih banyak diskusi dan planning untuk clarity. Partnership masih possible tapi needs work." 
+            },
+            musuhanEnding: { 
+                ending: "MUSUHAN", 
+                description: "Partnership gagal total! Perbedaan fundamental dalam working style, priorities, dan commitment level membuat collaboration impossible. Better to part ways sekarang daripada memaksakan cooperation yang toxic. Sometimes incompatibility is nobody's fault." 
+            }
+        };
+
+        // DOM elements
+        const chatMessages = document.getElementById('chatMessages');
+        const optionsContainer = document.getElementById('optionsContainer');
+
+        // Current conversation state
+        let currentNode = 1;
+        let messageCount = 0;
+
+        // Initialize chat
+        function initChat() {
+            chatMessages.innerHTML = '';
+            optionsContainer.innerHTML = '';
+            currentNode = 1;
+            messageCount = 0;
+            
+            // Start the conversation after a brief delay
+            setTimeout(() => {
+                showMessage(1);
+            }, 500);
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return typingDiv;
+        }
+
+        // Show message with typing effect
+        function showMessage(nodeId) {
+            const node = conversation[nodeId];
+            if (!node) return;
+
+            // Show typing indicator
+            const typingIndicator = showTypingIndicator();
+            
+            setTimeout(() => {
+                // Remove typing indicator
+                typingIndicator.remove();
+                
+                // Add bot message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                messageDiv.innerHTML = `
+                    <div class="sender-name">N2Oktena</div>
+                    ${node.text}
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Show options or ending
+                if (node.ending) {
+                    setTimeout(() => showEnding(node), 1000);
+                } else if (node.options) {
+                    setTimeout(() => showOptions(node.options), 800);
+                }
+            }, 1000 + Math.random() * 1000); // Random typing delay
+        }
+
+        // Show options
+        function showOptions(options) {
+            optionsContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                setTimeout(() => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option.text;
+                    button.onclick = () => selectOption(option);
+                    optionsContainer.appendChild(button);
+                }, index * 200);
+            });
+        }
+
+        // Handle option selection
+        function selectOption(option) {
+            // Add user message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `
+                <div class="sender-name">Fira</div>
+                ${option.text}
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Clear options
+            optionsContainer.innerHTML = '';
+            
+            // Continue conversation
+            currentNode = option.next;
+            setTimeout(() => {
+                showMessage(currentNode);
+            }, 800);
+        }
+
+        // Show ending
+        function showEnding(node) {
+            optionsContainer.innerHTML = '';
+            
+            const endingDiv = document.createElement('div');
+            endingDiv.className = 'ending-container';
+            endingDiv.innerHTML = `
+                <div class="ending-title">ENDING: ${node.ending}</div>
+                <div class="ending-description">${node.description}</div>
+                <button class="restart-button" onclick="initChat()">Mulai Lagi</button>
+            `;
+            
+            chatMessages.appendChild(endingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Start the chat when page loads
+        document.addEventListener('DOMContentLoaded', initChat);
+    </script>
+</body>
+</html>
